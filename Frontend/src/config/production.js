@@ -1,7 +1,7 @@
 // Configuración para producción
 export const config = {
   // Cambiar esta URL por la URL de tu backend en Render.com
-  API_BASE_URL: 'https://tu-backend.onrender.com/api',
+  API_BASE_URL: 'https://repuestos-mp-backend.onrender.com/api',
   
   // Configuración de la aplicación
   APP_NAME: 'Repuestos MP',

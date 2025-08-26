@@ -2,13 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
 
-const pool = new Pool({
-  user: 'postgres', // Hardcoded for troubleshooting
-  host: 'localhost', // Hardcoded for troubleshooting
-  database: 'repuestos_mp', // Hardcoded for troubleshooting
-  password: 'San48291258', // Hardcoded for troubleshooting
-  port: 5432, // Hardcoded for troubleshooting
-});
+// Usar la configuración de la base de datos principal
+const { pool } = require('../config/database');
 
 class User {
   static async findByUsername(username) {
