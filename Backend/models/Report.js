@@ -22,7 +22,7 @@ class Report {
   static async getTopProducts(startDate, endDate, limit = 5) {
     const query = `
       SELECT 
-f        p.name as product_name,
+        p.name as product_name,
         si.product_id,
         SUM(si.quantity) as total_quantity,
         SUM(si.total_price) as total_revenue,
