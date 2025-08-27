@@ -22,15 +22,16 @@ class Report {
   static async getTopProducts(startDate, endDate, limit = 5) {
     const query = `
       SELECT 
-        si.product_name,
+f        p.name as product_name,
         si.product_id,
         SUM(si.quantity) as total_quantity,
         SUM(si.total_price) as total_revenue,
         COUNT(DISTINCT s.id) as sales_count
       FROM sale_items si
       JOIN sales s ON si.sale_id = s.id
+      JOIN products p ON si.product_id = p.id
       WHERE s.created_at >= $1 AND s.created_at <= $2
-      GROUP BY si.product_name, si.product_id
+      GROUP BY p.name, si.product_id
       ORDER BY total_quantity DESC
       LIMIT $3
     `;
@@ -43,14 +44,15 @@ class Report {
   static async getTopCategories(startDate, endDate) {
     const query = `
       SELECT 
-        si.category,
+        p.category,
         SUM(si.quantity) as total_quantity,
         SUM(si.total_price) as total_revenue,
         COUNT(DISTINCT s.id) as sales_count
       FROM sale_items si
       JOIN sales s ON si.sale_id = s.id
+      JOIN products p ON si.product_id = p.id
       WHERE s.created_at >= $1 AND s.created_at <= $2
-      GROUP BY si.category
+      GROUP BY p.category
       ORDER BY total_quantity DESC
     `;
     
