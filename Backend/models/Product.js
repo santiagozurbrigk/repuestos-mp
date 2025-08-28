@@ -63,24 +63,24 @@ class Product {
 
   // Crear nuevo producto
   static async create(productData) {
-    const { id, name, category, quantity = 0 } = productData;
+    const { id, name, category, quantity = 0, unit_cost = null } = productData;
     
     // Primero asegurar que la categoría existe
     await this.ensureCategoryExists(category);
     
     const query = `
-      INSERT INTO products (id, name, category, quantity)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO products (id, name, category, quantity, unit_cost)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
     
-    const result = await pool.query(query, [id, name, category, quantity]);
+    const result = await pool.query(query, [id, name, category, quantity, unit_cost]);
     return result.rows[0];
   }
 
   // Actualizar producto
   static async update(id, updateData) {
-    const { name, category, quantity } = updateData;
+    const { name, category, quantity, unit_cost } = updateData;
     
     // Si se está actualizando la categoría, asegurar que existe
     if (category) {
@@ -107,6 +107,12 @@ class Product {
     if (quantity !== undefined) {
       updates.push(` quantity = $${paramIndex}`);
       params.push(quantity);
+      paramIndex++;
+    }
+
+    if (unit_cost !== undefined) {
+      updates.push(` unit_cost = $${paramIndex}`);
+      params.push(unit_cost);
       paramIndex++;
     }
 
@@ -140,7 +146,8 @@ class Product {
     const query = `
       SELECT 
         COUNT(*) as total_products,
-        COALESCE(SUM(quantity), 0) as total_quantity
+        COALESCE(SUM(quantity), 0) as total_quantity,
+        COALESCE(SUM(quantity * COALESCE(unit_cost, 0)), 0) as total_inventory_value
       FROM products
     `;
     const result = await pool.query(query);

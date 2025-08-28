@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, TrendingUp, Tag, AlertTriangle, Plus, ShoppingCart } from 'lucide-react';
+import { Package, TrendingUp, Tag, AlertTriangle, Plus, ShoppingCart, DollarSign } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { dashboardAPI } from '../services/api';
 import Logo from '../components/Logo';
@@ -84,7 +84,7 @@ const Dashboard = () => {
         </div>
 
       {/* Tarjetas de estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-colors duration-200">
           <div className="flex items-center">
             <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
@@ -105,6 +105,20 @@ const Dashboard = () => {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Unidades</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.totalQuantity}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md transition-colors duration-200">
+          <div className="flex items-center">
+            <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-full">
+              <DollarSign className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Valor del Inventario</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                ${parseFloat(stats.totalInventoryValue || 0).toFixed(2)}
+              </p>
             </div>
           </div>
         </div>
