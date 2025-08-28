@@ -309,10 +309,15 @@ const ProductList = () => {
                     <div className="relative">
                       <DollarSign className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
                       <input
-                        type="number"
-                        step="0.01"
+                        type="text"
                         value={newProduct.unit_cost}
-                        onChange={(e) => handleNewProductChange('unit_cost', e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Permitir solo números, punto decimal y vacío
+                          if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                            handleNewProductChange('unit_cost', value);
+                          }
+                        }}
                         placeholder="0.00"
                         className="w-full pl-6 pr-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                       />
@@ -404,10 +409,15 @@ const ProductList = () => {
                       <div className="relative">
                         <DollarSign className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
                         <input
-                          type="number"
-                          step="0.01"
+                          type="text"
                           value={product.unit_cost || ''}
-                          onChange={(e) => handleEditChange(product.id, 'unit_cost', e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Permitir solo números, punto decimal y vacío
+                            if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                              handleEditChange(product.id, 'unit_cost', value);
+                            }
+                          }}
                           placeholder="0.00"
                           className="w-full pl-6 pr-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                         />
