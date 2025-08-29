@@ -65,7 +65,7 @@ app.get('/api/products', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, category, quantity = 0 } = req.body;
+    const { name, category, quantity = 0, unit_cost } = req.body;
     
     if (!name || !category) {
       return res.status(400).json({ error: 'Nombre y categoría son requeridos' });
@@ -75,7 +75,8 @@ app.post('/api/products', async (req, res) => {
       id: generateProductId(),
       name,
       category,
-      quantity: parseInt(quantity)
+      quantity: parseInt(quantity),
+      unit_cost: unit_cost === '' ? null : parseFloat(unit_cost)
     };
     
     const createdProduct = await Product.create(newProduct);
@@ -89,7 +90,7 @@ app.post('/api/products', async (req, res) => {
 app.put('/api/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, category, quantity } = req.body;
+    const { name, category, quantity, unit_cost } = req.body;
     
     const existingProduct = await Product.getById(id);
     if (!existingProduct) {
@@ -100,6 +101,7 @@ app.put('/api/products/:id', async (req, res) => {
     if (name !== undefined) updateData.name = name;
     if (category !== undefined) updateData.category = category;
     if (quantity !== undefined) updateData.quantity = parseInt(quantity);
+    if (unit_cost !== undefined) updateData.unit_cost = unit_cost === '' ? null : parseFloat(unit_cost);
     
     const updatedProduct = await Product.update(id, updateData);
     res.json(updatedProduct);

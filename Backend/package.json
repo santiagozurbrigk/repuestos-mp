@@ -11,6 +11,7 @@
     "create-admin": "node scripts/create-admin.js",
     "add-unit-cost": "node scripts/add-unit-cost-to-db.js",
     "add-unit-cost-prod": "node scripts/add-unit-cost-production.js",
+    "add-unit-cost-prod-local": "node scripts/add-unit-cost-production-local.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
