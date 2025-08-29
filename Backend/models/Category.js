@@ -8,7 +8,8 @@ class Category {
         c.name,
         c.created_at,
         COUNT(p.id) as product_count,
-        COALESCE(SUM(p.quantity), 0) as total_quantity
+        COALESCE(SUM(p.quantity), 0) as total_quantity,
+        COALESCE(SUM(p.quantity * COALESCE(p.unit_cost, 0)), 0) as total_value
       FROM categories c
       LEFT JOIN products p ON c.name = p.category
       GROUP BY c.id, c.name, c.created_at
@@ -69,7 +70,8 @@ class Category {
       SELECT 
         c.name as category,
         COUNT(p.id) as product_count,
-        COALESCE(SUM(p.quantity), 0) as total_quantity
+        COALESCE(SUM(p.quantity), 0) as total_quantity,
+        COALESCE(SUM(p.quantity * COALESCE(p.unit_cost, 0)), 0) as total_value
       FROM categories c
       LEFT JOIN products p ON c.name = p.category
       GROUP BY c.name

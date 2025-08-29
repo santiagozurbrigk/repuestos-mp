@@ -200,6 +200,7 @@ app.get('/api/dashboard', async (req, res) => {
     res.json({
       totalProducts: parseInt(productStats.total_products),
       totalQuantity: parseInt(productStats.total_quantity),
+      totalInventoryValue: parseFloat(productStats.total_inventory_value || 0),
       categoryStats: statsWithPercentage
     });
   } catch (error) {
