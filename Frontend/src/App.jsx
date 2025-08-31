@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ProductList from './pages/ProductList';
-import ProductForm from './pages/ProductForm';
+
 import CategoryManagement from './pages/CategoryManagement';
 import SalesHistory from './pages/SalesHistory';
 import NewSale from './pages/NewSale';
@@ -53,31 +53,7 @@ function App() {
               </ProtectedRoute>
             } />
             
-            <Route path="/products/new" element={
-              <ProtectedRoute>
-                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-                  <Sidebar />
-                  <main className="lg:ml-64">
-                    <div className="px-4 py-8 lg:px-8">
-                      <ProductForm />
-                    </div>
-                  </main>
-                </div>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/products/edit/:id" element={
-              <ProtectedRoute>
-                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-                  <Sidebar />
-                  <main className="lg:ml-64">
-                    <div className="px-4 py-8 lg:px-8">
-                      <ProductForm />
-                    </div>
-                  </main>
-                </div>
-              </ProtectedRoute>
-            } />
+
             
             <Route path="/sales" element={
               <ProtectedRoute>

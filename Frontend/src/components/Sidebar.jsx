@@ -14,7 +14,6 @@ const Sidebar = () => {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
     { path: '/products', label: 'Productos', icon: Package },
-    { path: '/products/new', label: 'Nuevo Producto', icon: Plus },
     { path: '/sales', label: 'Ventas', icon: ShoppingCart },
     { path: '/sales/new', label: 'Nueva Venta', icon: Plus },
     { path: '/reports', label: 'Reportes', icon: BarChart3 },
