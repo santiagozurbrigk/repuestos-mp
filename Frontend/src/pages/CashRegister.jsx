@@ -31,7 +31,7 @@ const CashRegister = () => {
     try {
       const response = await cashRegisterAPI.getByDate(formData.date);
       console.log('Respuesta de getByDate:', response);
-      if (response.data) {
+      if (response.data && response.data.id) {
         console.log('Registro existente encontrado:', response.data);
         setExistingRecord(response.data);
         setFormData({
@@ -65,7 +65,17 @@ const CashRegister = () => {
         setCategories(existingCategories);
       } else {
         setExistingRecord(null);
-        resetForm();
+        // Limpiar solo los campos, manteniendo la fecha seleccionada
+        setFormData(prev => ({
+          ...prev,
+          shipping: '',
+          miscellaneous_expenses: '',
+          notes: ''
+        }));
+        setSales([]);
+        setCategories([]);
+        setNewSale({ value: '', type: 'cash' });
+        setNewCategory({ value: '', type: 'accessories' });
       }
     } catch (error) {
       console.error('Error en checkExistingRecord:', error);
@@ -73,9 +83,9 @@ const CashRegister = () => {
     }
   };
 
-  const resetForm = () => {
+  const resetForm = (keepDate = false) => {
     setFormData({
-      date: new Date().toISOString().split('T')[0],
+      date: keepDate ? formData.date : new Date().toISOString().split('T')[0],
       shipping: '',
       miscellaneous_expenses: '',
       notes: ''
@@ -232,15 +242,36 @@ const CashRegister = () => {
 
       console.log('Datos a enviar:', submitData);
 
-      if (existingRecord) {
+      if (existingRecord && existingRecord.id) {
         console.log('Actualizando registro con ID:', existingRecord.id);
-        await cashRegisterAPI.update(existingRecord.id, submitData);
+        const updatedRecord = await cashRegisterAPI.update(existingRecord.id, submitData);
         setSuccess('Registro actualizado correctamente');
+        setExistingRecord(updatedRecord.data);
       } else {
-        await cashRegisterAPI.create(submitData);
-        setSuccess('Registro creado correctamente');
-        setExistingRecord(true);
+        // Crear nuevo registro
+        const newRecord = await cashRegisterAPI.create(submitData);
+        setSuccess('Registro creado correctamente. Ahora puedes actualizarlo.');
+        
+        // Actualizar automáticamente el estado para que funcione como actualización
+        setExistingRecord(newRecord.data);
+        
+        // Recargar los datos del registro recién creado para asegurar sincronización
+        setTimeout(async () => {
+          try {
+            const refreshedRecord = await cashRegisterAPI.getByDate(formData.date);
+            if (refreshedRecord.data) {
+              setExistingRecord(refreshedRecord.data);
+            }
+          } catch (error) {
+            console.error('Error al recargar registro:', error);
+          }
+        }, 500);
       }
+      
+      // Limpiar mensaje de éxito después de 3 segundos
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
     } catch (err) {
       setError(err.response?.data?.error || 'Error al guardar el registro');
     } finally {
@@ -545,7 +576,7 @@ const CashRegister = () => {
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={resetForm}
+            onClick={() => resetForm(true)}
             className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             Limpiar
