@@ -430,6 +430,19 @@ app.get('/api/cash-register/:id', async (req, res) => {
   }
 });
 
+// Endpoint para obtener registro por fecha
+app.get('/api/cash-register/date/:date', async (req, res) => {
+  try {
+    const { date } = req.params;
+    const record = await CashRegister.getByDate(date);
+    
+    res.json(record);
+  } catch (error) {
+    console.error('Error obteniendo registro de caja por fecha:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
 app.put('/api/cash-register/:id', async (req, res) => {
   try {
     const { id } = req.params;

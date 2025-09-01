@@ -84,7 +84,7 @@ export const cashRegisterAPI = {
   create: (data) => api.post('/cash-register', data),
   getAll: (params = {}) => api.get('/cash-register', { params }),
   getById: (id) => api.get(`/cash-register/${id}`),
-  getByDate: (date) => api.get(`/cash-register?date=${date}`),
+  getByDate: (date) => api.get(`/cash-register/date/${date}`),
   update: (id, data) => api.put(`/cash-register/${id}`, data),
   delete: (id) => api.delete(`/cash-register/${id}`),
   getStats: () => api.get('/cash-register/stats/overview'),
