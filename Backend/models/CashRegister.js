@@ -116,6 +116,11 @@ class CashRegister {
 
   // Actualizar registro
   static async update(id, updateData) {
+    // Validar que el ID sea válido
+    if (!id || isNaN(parseInt(id))) {
+      throw new Error('ID inválido');
+    }
+
     const {
       cash_sales,
       card_sales,
@@ -185,10 +190,18 @@ class CashRegister {
       paramIndex++;
     }
 
+    // Si no hay campos para actualizar, retornar el registro actual
+    if (updates.length === 0) {
+      return await this.getById(id);
+    }
+
     query += updates.join(',');
     query += ` WHERE id = $${paramIndex} RETURNING *`;
     params.push(id);
 
+    console.log('Query:', query);
+    console.log('Params:', params);
+    
     const result = await pool.query(query, params);
     return result.rows[0];
   }

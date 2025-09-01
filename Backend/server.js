@@ -433,6 +433,10 @@ app.get('/api/cash-register/:id', async (req, res) => {
 app.put('/api/cash-register/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    
+    console.log('ID recibido:', id);
+    console.log('Body recibido:', req.body);
+    
     const {
       cash_sales,
       card_sales,
@@ -457,6 +461,8 @@ app.put('/api/cash-register/:id', async (req, res) => {
     if (sheet_metal !== undefined) updateData.sheet_metal = parseFloat(sheet_metal || 0);
     if (led !== undefined) updateData.led = parseFloat(led || 0);
     if (notes !== undefined) updateData.notes = notes || '';
+
+    console.log('Datos procesados para actualización:', updateData);
 
     const updatedRecord = await CashRegister.update(id, updateData);
     res.json(updatedRecord);
