@@ -9,9 +9,8 @@ import Dashboard from './pages/Dashboard';
 import ProductList from './pages/ProductList';
 
 import CategoryManagement from './pages/CategoryManagement';
-import SalesHistory from './pages/SalesHistory';
-import NewSale from './pages/NewSale';
-import SaleDetail from './pages/SaleDetail';
+import CashRegister from './pages/CashRegister';
+import CashHistory from './pages/CashHistory';
 import Reports from './pages/Reports';
 import './App.css';
 
@@ -55,39 +54,26 @@ function App() {
             
 
             
-            <Route path="/sales" element={
+            <Route path="/cash-register" element={
               <ProtectedRoute>
                 <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
                   <Sidebar />
                   <main className="lg:ml-64">
                     <div className="px-4 py-8 lg:px-8">
-                      <SalesHistory />
+                      <CashRegister />
                     </div>
                   </main>
                 </div>
               </ProtectedRoute>
             } />
             
-            <Route path="/sales/new" element={
+            <Route path="/cash-history" element={
               <ProtectedRoute>
                 <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
                   <Sidebar />
                   <main className="lg:ml-64">
                     <div className="px-4 py-8 lg:px-8">
-                      <NewSale />
-                    </div>
-                  </main>
-                </div>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/sales/:id" element={
-              <ProtectedRoute>
-                <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-                  <Sidebar />
-                  <main className="lg:ml-64">
-                    <div className="px-4 py-8 lg:px-8">
-                      <SaleDetail />
+                      <CashHistory />
                     </div>
                   </main>
                 </div>

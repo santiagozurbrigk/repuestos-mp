@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Package, Plus, Tag, Menu, X, ShoppingCart, BarChart3, Sun, Moon, LogOut, User } from 'lucide-react';
+import { Home, Package, Tag, Menu, X, DollarSign, Calendar, BarChart3, Sun, Moon, LogOut, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -14,8 +14,8 @@ const Sidebar = () => {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
     { path: '/products', label: 'Productos', icon: Package },
-    { path: '/sales', label: 'Ventas', icon: ShoppingCart },
-    { path: '/sales/new', label: 'Nueva Venta', icon: Plus },
+    { path: '/cash-register', label: 'Caja', icon: DollarSign },
+    { path: '/cash-history', label: 'Historial Caja', icon: Calendar },
     { path: '/reports', label: 'Reportes', icon: BarChart3 },
     { path: '/categories', label: 'Categorías', icon: Tag },
   ];

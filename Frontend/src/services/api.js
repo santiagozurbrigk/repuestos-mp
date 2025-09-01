@@ -79,6 +79,20 @@ export const reportsAPI = {
   getSalesDetail: (params) => api.get('/reports/sales-detail', { params }),
 };
 
+// Caja
+export const cashRegisterAPI = {
+  create: (data) => api.post('/cash-register', data),
+  getAll: (params = {}) => api.get('/cash-register', { params }),
+  getById: (id) => api.get(`/cash-register/${id}`),
+  getByDate: (date) => api.get(`/cash-register?date=${date}`),
+  update: (id, data) => api.put(`/cash-register/${id}`, data),
+  delete: (id) => api.delete(`/cash-register/${id}`),
+  getStats: () => api.get('/cash-register/stats/overview'),
+  getStatsByPeriod: (startDate, endDate) => api.get('/cash-register/stats/period', { 
+    params: { startDate, endDate } 
+  }),
+};
+
 // Autenticación
 export const authAPI = {
   login: (data) => api.post('/auth/login', data),
