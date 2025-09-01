@@ -9,6 +9,7 @@ const Product = require('./models/Product');
 const Category = require('./models/Category');
 const Sale = require('./models/Sale');
 const Report = require('./models/Report');
+const CashRegister = require('./models/CashRegister');
 
 // Importar rutas de autenticación
 const authRoutes = require('./routes/auth');
@@ -346,6 +347,165 @@ app.get('/api/reports/sales-detail', async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Error obteniendo detalle de ventas:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Rutas para caja
+app.post('/api/cash-register', async (req, res) => {
+  try {
+    const {
+      date,
+      cash_sales,
+      card_sales,
+      shipping,
+      miscellaneous_expenses,
+      fernando_withdrawal,
+      pedro_withdrawal,
+      accessories,
+      sheet_metal,
+      led,
+      notes
+    } = req.body;
+
+    // Verificar si ya existe un registro para esta fecha
+    const existingRecord = await CashRegister.getByDate(date);
+    if (existingRecord) {
+      return res.status(400).json({ error: 'Ya existe un registro para esta fecha' });
+    }
+
+    const cashData = {
+      date,
+      cash_sales: parseFloat(cash_sales || 0),
+      card_sales: parseFloat(card_sales || 0),
+      shipping: parseFloat(shipping || 0),
+      miscellaneous_expenses: parseFloat(miscellaneous_expenses || 0),
+      fernando_withdrawal: parseFloat(fernando_withdrawal || 0),
+      pedro_withdrawal: parseFloat(pedro_withdrawal || 0),
+      accessories: parseFloat(accessories || 0),
+      sheet_metal: parseFloat(sheet_metal || 0),
+      led: parseFloat(led || 0),
+      notes: notes || ''
+    };
+
+    const createdRecord = await CashRegister.create(cashData);
+    res.status(201).json(createdRecord);
+  } catch (error) {
+    console.error('Error creando registro de caja:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.get('/api/cash-register', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, startDate, endDate } = req.query;
+    
+    const result = await CashRegister.getAll({
+      page: parseInt(page),
+      limit: parseInt(limit),
+      startDate,
+      endDate
+    });
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error obteniendo registros de caja:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.get('/api/cash-register/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const record = await CashRegister.getById(id);
+    
+    if (!record) {
+      return res.status(404).json({ error: 'Registro no encontrado' });
+    }
+    
+    res.json(record);
+  } catch (error) {
+    console.error('Error obteniendo registro de caja:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.put('/api/cash-register/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      cash_sales,
+      card_sales,
+      shipping,
+      miscellaneous_expenses,
+      fernando_withdrawal,
+      pedro_withdrawal,
+      accessories,
+      sheet_metal,
+      led,
+      notes
+    } = req.body;
+
+    const updateData = {};
+    if (cash_sales !== undefined) updateData.cash_sales = parseFloat(cash_sales || 0);
+    if (card_sales !== undefined) updateData.card_sales = parseFloat(card_sales || 0);
+    if (shipping !== undefined) updateData.shipping = parseFloat(shipping || 0);
+    if (miscellaneous_expenses !== undefined) updateData.miscellaneous_expenses = parseFloat(miscellaneous_expenses || 0);
+    if (fernando_withdrawal !== undefined) updateData.fernando_withdrawal = parseFloat(fernando_withdrawal || 0);
+    if (pedro_withdrawal !== undefined) updateData.pedro_withdrawal = parseFloat(pedro_withdrawal || 0);
+    if (accessories !== undefined) updateData.accessories = parseFloat(accessories || 0);
+    if (sheet_metal !== undefined) updateData.sheet_metal = parseFloat(sheet_metal || 0);
+    if (led !== undefined) updateData.led = parseFloat(led || 0);
+    if (notes !== undefined) updateData.notes = notes || '';
+
+    const updatedRecord = await CashRegister.update(id, updateData);
+    res.json(updatedRecord);
+  } catch (error) {
+    console.error('Error actualizando registro de caja:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.delete('/api/cash-register/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const existingRecord = await CashRegister.getById(id);
+    if (!existingRecord) {
+      return res.status(404).json({ error: 'Registro no encontrado' });
+    }
+    
+    await CashRegister.delete(id);
+    res.json({ message: 'Registro eliminado correctamente' });
+  } catch (error) {
+    console.error('Error eliminando registro de caja:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Ruta para estadísticas de caja
+app.get('/api/cash-register/stats/overview', async (req, res) => {
+  try {
+    const stats = await CashRegister.getStats();
+    res.json(stats);
+  } catch (error) {
+    console.error('Error obteniendo estadísticas de caja:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.get('/api/cash-register/stats/period', async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: 'Se requieren fechas de inicio y fin' });
+    }
+
+    const stats = await CashRegister.getStatsByPeriod(startDate, endDate);
+    res.json(stats);
+  } catch (error) {
+    console.error('Error obteniendo estadísticas de caja por período:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
