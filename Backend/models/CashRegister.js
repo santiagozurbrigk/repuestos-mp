@@ -27,8 +27,17 @@ class CashRegister {
     `;
 
     const values = [
-      date, cash_sales, card_sales, shipping, miscellaneous_expenses,
-      fernando_withdrawal, pedro_withdrawal, accessories, sheet_metal, led, notes
+      date, 
+      parseFloat(cash_sales) || 0, 
+      parseFloat(card_sales) || 0, 
+      parseFloat(shipping) || 0, 
+      parseFloat(miscellaneous_expenses) || 0,
+      parseFloat(fernando_withdrawal) || 0, 
+      parseFloat(pedro_withdrawal) || 0, 
+      parseFloat(accessories) || 0, 
+      parseFloat(sheet_metal) || 0, 
+      parseFloat(led) || 0, 
+      notes || ''
     ];
 
     const result = await pool.query(query, values);
@@ -125,54 +134,54 @@ class CashRegister {
     let paramIndex = 1;
     const updates = [];
 
-    if (cash_sales !== undefined) {
+    if (cash_sales !== undefined && cash_sales !== null) {
       updates.push(` cash_sales = $${paramIndex}`);
-      params.push(cash_sales);
+      params.push(parseFloat(cash_sales) || 0);
       paramIndex++;
     }
-    if (card_sales !== undefined) {
+    if (card_sales !== undefined && card_sales !== null) {
       updates.push(` card_sales = $${paramIndex}`);
-      params.push(card_sales);
+      params.push(parseFloat(card_sales) || 0);
       paramIndex++;
     }
-    if (shipping !== undefined) {
+    if (shipping !== undefined && shipping !== null) {
       updates.push(` shipping = $${paramIndex}`);
-      params.push(shipping);
+      params.push(parseFloat(shipping) || 0);
       paramIndex++;
     }
-    if (miscellaneous_expenses !== undefined) {
+    if (miscellaneous_expenses !== undefined && miscellaneous_expenses !== null) {
       updates.push(` miscellaneous_expenses = $${paramIndex}`);
-      params.push(miscellaneous_expenses);
+      params.push(parseFloat(miscellaneous_expenses) || 0);
       paramIndex++;
     }
-    if (fernando_withdrawal !== undefined) {
+    if (fernando_withdrawal !== undefined && fernando_withdrawal !== null) {
       updates.push(` fernando_withdrawal = $${paramIndex}`);
-      params.push(fernando_withdrawal);
+      params.push(parseFloat(fernando_withdrawal) || 0);
       paramIndex++;
     }
-    if (pedro_withdrawal !== undefined) {
+    if (pedro_withdrawal !== undefined && pedro_withdrawal !== null) {
       updates.push(` pedro_withdrawal = $${paramIndex}`);
-      params.push(pedro_withdrawal);
+      params.push(parseFloat(pedro_withdrawal) || 0);
       paramIndex++;
     }
-    if (accessories !== undefined) {
+    if (accessories !== undefined && accessories !== null) {
       updates.push(` accessories = $${paramIndex}`);
-      params.push(accessories);
+      params.push(parseFloat(accessories) || 0);
       paramIndex++;
     }
-    if (sheet_metal !== undefined) {
+    if (sheet_metal !== undefined && sheet_metal !== null) {
       updates.push(` sheet_metal = $${paramIndex}`);
-      params.push(sheet_metal);
+      params.push(parseFloat(sheet_metal) || 0);
       paramIndex++;
     }
-    if (led !== undefined) {
+    if (led !== undefined && led !== null) {
       updates.push(` led = $${paramIndex}`);
-      params.push(led);
+      params.push(parseFloat(led) || 0);
       paramIndex++;
     }
-    if (notes !== undefined) {
+    if (notes !== undefined && notes !== null) {
       updates.push(` notes = $${paramIndex}`);
-      params.push(notes);
+      params.push(notes || '');
       paramIndex++;
     }
 
