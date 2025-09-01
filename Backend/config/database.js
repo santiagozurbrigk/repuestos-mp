@@ -73,6 +73,57 @@ const initDatabase = async () => {
         EXECUTE FUNCTION update_updated_at_column()
     `);
 
+    // Crear tabla de usuarios
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        role VARCHAR(20) DEFAULT 'admin',
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Crear tabla de caja
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS cash_register (
+        id SERIAL PRIMARY KEY,
+        date DATE NOT NULL UNIQUE,
+        cash_sales DECIMAL(10,2) DEFAULT 0,
+        card_sales DECIMAL(10,2) DEFAULT 0,
+        shipping DECIMAL(10,2) DEFAULT 0,
+        miscellaneous_expenses DECIMAL(10,2) DEFAULT 0,
+        fernando_withdrawal DECIMAL(10,2) DEFAULT 0,
+        pedro_withdrawal DECIMAL(10,2) DEFAULT 0,
+        accessories DECIMAL(10,2) DEFAULT 0,
+        sheet_metal DECIMAL(10,2) DEFAULT 0,
+        led DECIMAL(10,2) DEFAULT 0,
+        notes TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Crear índices para caja
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_cash_register_date ON cash_register(date)
+    `);
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_cash_register_created_at ON cash_register(created_at)
+    `);
+
+    // Crear trigger para updated_at en caja
+    await client.query(`
+      DROP TRIGGER IF EXISTS update_cash_register_updated_at ON cash_register;
+      CREATE TRIGGER update_cash_register_updated_at
+        BEFORE UPDATE ON cash_register
+        FOR EACH ROW
+        EXECUTE FUNCTION update_updated_at_column()
+    `);
+
     client.release();
     console.log('✅ Base de datos inicializada correctamente');
   } catch (err) {
